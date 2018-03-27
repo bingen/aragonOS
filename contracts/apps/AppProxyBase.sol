@@ -4,9 +4,29 @@ import "./IAppProxy.sol";
 import "./AppStorage.sol";
 import "../common/DelegateProxy.sol";
 import "../kernel/KernelStorage.sol";
+import "../lib/zeppelin/token/ERC20.sol";
 
 
 contract AppProxyBase is IAppProxy, AppStorage, DelegateProxy, KernelConstants {
+    event ProxyDeposit(address sender, uint256 value);
+
+    /**
+    * @notice Send funds to default Vault. This contract should never receive funds,
+    *         but in case it does, this function allows to recover them.
+    * @param _token Token balance to be sent to Vault. ETH(0x0) for ether.
+    */
+    function transferToVault(address _token) external {
+        address vault = kernel.getDefaultVault();
+        require(isContract(vault));
+
+        if (_token == ETH) {
+            vault.transfer(address(this).balance);
+        } else {
+            uint256 amount = ERC20(_token).balanceOf(this);
+            ERC20(_token).transfer(vault, amount);
+        }
+    }
+
     /**
     * @dev Initialize AppProxy
     * @param _kernel Reference to organization kernel for the app
@@ -37,8 +57,15 @@ contract AppProxyBase is IAppProxy, AppStorage, DelegateProxy, KernelConstants {
     }
 
     function () payable public {
-        address target = getCode();
-        require(target != 0); // if app code hasn't been set yet, don't call
-        delegatedFwd(target, msg.data);
+        // all calls except for send or transfer
+        if (msg.gas > 10000) {
+            address target = getCode();
+            require(target != 0); // if app code hasn't been set yet, don't call
+            delegatedFwd(target, msg.data);
+        }
+
+        // send / transfer
+        require(msg.value > 0 && msg.data.length == 0);
+        ProxyDeposit(msg.sender, msg.value);
     }
 }

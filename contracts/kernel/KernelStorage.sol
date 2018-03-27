@@ -11,9 +11,12 @@ contract KernelConstants {
 
     bytes32 constant public ACL_APP_ID = keccak256("acl.aragonpm.eth");
     bytes32 constant public ACL_APP = keccak256(APP_ADDR_NAMESPACE, ACL_APP_ID);
+
+    address constant public ETH = 0x0;
 }
 
 
 contract KernelStorage is KernelConstants {
     mapping (bytes32 => address) public apps;
+    bytes32 public defaultVaultId;
 }
