@@ -34,17 +34,17 @@ contract KernelOverloadMock {
         emit NewAppProxy(appProxy);
     }
 
+    function newPinnedAppInstance(bytes32 _appId, address _appBase)
+        public
+        returns (ERCProxy appProxy)
+    {
+        appProxy = kernel.newPinnedAppInstance(_appId, _appBase);
+        emit NewAppProxy(appProxy);
+    }
     /*
     function newPinnedAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault)
         public
         auth(APP_MANAGER_ROLE, arr(KERNEL_APP_BASES_NAMESPACE, _appId))
         returns (ERCProxy appProxy)
     */
-    function newPinnedAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault)
-        public
-        returns (ERCProxy appProxy)
-    {
-        appProxy = kernel.newPinnedAppInstance(_appId, _appBase, _initializePayload, _setDefault);
-        emit NewAppProxy(appProxy);
-    }
 }

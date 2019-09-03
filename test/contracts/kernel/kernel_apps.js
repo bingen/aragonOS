@@ -96,7 +96,7 @@ contract('Kernel apps', ([permissionsRoot]) => {
                 context(`> new ${appProxyType} instances`, () => {
                     onlyAppProxy(() =>
                         it('creates a new upgradeable app proxy instance', async () => {
-                            const receipt = await kernel.newAppInstance(APP_ID, appBase1.address, EMPTY_BYTES, false)
+                            const receipt = await kernel.newAppInstance(APP_ID, appBase1.address)
                             const appProxy = AppProxyUpgradeable.at(getNewProxyAddress(receipt))
                             assert.equal(await appProxy.kernel(), kernel.address, "new appProxy instance's kernel should be set to the originating kernel")
 
@@ -132,16 +132,17 @@ contract('Kernel apps', ([permissionsRoot]) => {
                         it('sets the app base when not previously registered', async() => {
                             assert.equal(ZERO_ADDR, await kernel.getApp(APP_BASES_NAMESPACE, APP_ID))
 
-                            await kernelOverload[newInstanceFn](APP_ID, appBase1.address, EMPTY_BYTES, false)
+                            await kernelOverload[newInstanceFn](APP_ID, appBase1.address)
                             assert.equal(appBase1.address, await kernel.getApp(APP_BASES_NAMESPACE, APP_ID))
                         })
 
                         it("doesn't set the app base when already set", async() => {
                             await kernel.setApp(APP_BASES_NAMESPACE, APP_ID, appBase1.address)
-                            const receipt = await kernelOverload[newInstanceFn](APP_ID, appBase1.address, EMPTY_BYTES, false)
+                            const receipt = await kernelOverload[newInstanceFn](APP_ID, appBase1.address)
                             assertAmountOfEvents(receipt, 'SetApp', 0)
                         })
 
+                        /* TODO
                         it("also sets the default app", async () => {
                             const receipt = await kernelOverload[newInstanceFn](APP_ID, appBase1.address, EMPTY_BYTES, true)
                             const appProxyAddr = getNewProxyAddress(receipt)
@@ -166,9 +167,10 @@ contract('Kernel apps', ([permissionsRoot]) => {
                             assert.equal(await kernel.getApp(APP_BASES_NAMESPACE, APP_ID), appBase1.address, 'App base should be set')
                             assert.equal(await kernel.getApp(APP_ADDR_NAMESPACE, APP_ID), ZERO_ADDR, "Default app shouldn't be set")
                         })
+                        */
 
                         it("fails if the app base is not given", async() => {
-                            await assertRevert(kernelOverload[newInstanceFn](APP_ID, ZERO_ADDR, EMPTY_BYTES, false))
+                            await assertRevert(kernelOverload[newInstanceFn](APP_ID, ZERO_ADDR))
                         })
 
                         it('fails if the given app base is different than the existing one', async() => {
@@ -177,7 +179,7 @@ contract('Kernel apps', ([permissionsRoot]) => {
                             assert.notEqual(existingBase, differentBase, 'appBase1 and appBase2 should have different addresses')
 
                             await kernel.setApp(APP_BASES_NAMESPACE, APP_ID, existingBase)
-                            await assertRevert(kernelOverload[newInstanceFn](APP_ID, differentBase, EMPTY_BYTES, false))
+                            await assertRevert(kernelOverload[newInstanceFn](APP_ID, differentBase))
                         })
                     })
 

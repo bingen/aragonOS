@@ -1,13 +1,11 @@
 pragma solidity 0.4.24;
 
 import "../../../apps/AragonApp.sol";
-import "../../../common/DepositableStorage.sol";
 
 
-contract AppStubConditionalRecovery is AragonApp, DepositableStorage {
+contract AppStubConditionalRecovery is AragonApp {
     function initialize() onlyInit public {
         initialized();
-        setDepositable(true);
     }
 
     function allowRecoverability(address token) public view returns (bool) {

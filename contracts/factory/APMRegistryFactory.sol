@@ -78,6 +78,7 @@ contract APMRegistryFactory is APMInternalAppNames {
                 keccak256(abi.encodePacked(node, keccak256(abi.encodePacked(ENS_SUB_APP_NAME)))),
                 ensSubdomainRegistrarBase,
                 noInit,
+                false,
                 false
             )
         );
@@ -86,6 +87,7 @@ contract APMRegistryFactory is APMInternalAppNames {
                 keccak256(abi.encodePacked(node, keccak256(abi.encodePacked(APM_APP_NAME)))),
                 registryBase,
                 noInit,
+                false,
                 false
             )
         );

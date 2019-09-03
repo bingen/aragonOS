@@ -2,12 +2,10 @@ pragma solidity 0.4.24;
 
 import "../../../apps/AragonApp.sol";
 import "../../../apps/UnsafeAragonApp.sol";
-import "../../../common/DepositableStorage.sol";
 
 
-contract AppStubDepositable is AragonApp, DepositableStorage {
+contract AppStubDepositable is AragonApp {
     function () external payable {
-        require(isDepositable());
     }
 
     function initialize() onlyInit public {
@@ -15,7 +13,6 @@ contract AppStubDepositable is AragonApp, DepositableStorage {
     }
 
     function enableDeposits() external {
-        setDepositable(true);
     }
 }
 

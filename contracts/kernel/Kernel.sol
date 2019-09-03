@@ -66,7 +66,15 @@ contract Kernel is IKernel, KernelStorage, KernelAppIds, KernelNamespaceConstant
         auth(APP_MANAGER_ROLE, arr(KERNEL_APP_BASES_NAMESPACE, _appId))
         returns (ERCProxy appProxy)
     {
-        return newAppInstance(_appId, _appBase, new bytes(0), false);
+        return newAppInstance(_appId, _appBase, new bytes(0), false, false);
+    }
+
+    function newAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault)
+        public
+        auth(APP_MANAGER_ROLE, arr(KERNEL_APP_BASES_NAMESPACE, _appId))
+        returns (ERCProxy appProxy)
+    {
+        return newAppInstance(_appId, _appBase, new bytes(0), _setDefault, false);
     }
 
     /**
@@ -81,13 +89,13 @@ contract Kernel is IKernel, KernelStorage, KernelAppIds, KernelNamespaceConstant
     *        like Vault for escape hatch mechanism.
     * @return AppProxy instance
     */
-    function newAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault)
+    function newAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault, bool _depositable)
         public
         auth(APP_MANAGER_ROLE, arr(KERNEL_APP_BASES_NAMESPACE, _appId))
         returns (ERCProxy appProxy)
     {
         _setAppIfNew(KERNEL_APP_BASES_NAMESPACE, _appId, _appBase);
-        appProxy = newAppProxy(this, _appId, _initializePayload);
+        appProxy = newAppProxy(this, _appId, _initializePayload, _depositable);
         // By calling setApp directly and not the internal functions, we make sure the params are checked
         // and it will only succeed if sender has permissions to set something to the namespace.
         if (_setDefault) {
@@ -107,7 +115,15 @@ contract Kernel is IKernel, KernelStorage, KernelAppIds, KernelNamespaceConstant
         auth(APP_MANAGER_ROLE, arr(KERNEL_APP_BASES_NAMESPACE, _appId))
         returns (ERCProxy appProxy)
     {
-        return newPinnedAppInstance(_appId, _appBase, new bytes(0), false);
+        return newPinnedAppInstance(_appId, _appBase, new bytes(0), false, false);
+    }
+
+    function newPinnedAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault)
+        public
+        auth(APP_MANAGER_ROLE, arr(KERNEL_APP_BASES_NAMESPACE, _appId))
+        returns (ERCProxy appProxy)
+    {
+        return newPinnedAppInstance(_appId, _appBase, new bytes(0), _setDefault, false);
     }
 
     /**
@@ -122,13 +138,13 @@ contract Kernel is IKernel, KernelStorage, KernelAppIds, KernelNamespaceConstant
     *        like Vault for escape hatch mechanism.
     * @return AppProxy instance
     */
-    function newPinnedAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault)
+    function newPinnedAppInstance(bytes32 _appId, address _appBase, bytes _initializePayload, bool _setDefault, bool _depositable)
         public
         auth(APP_MANAGER_ROLE, arr(KERNEL_APP_BASES_NAMESPACE, _appId))
         returns (ERCProxy appProxy)
     {
         _setAppIfNew(KERNEL_APP_BASES_NAMESPACE, _appId, _appBase);
-        appProxy = newAppProxyPinned(this, _appId, _initializePayload);
+        appProxy = newAppProxyPinned(this, _appId, _initializePayload, _depositable);
         // By calling setApp directly and not the internal functions, we make sure the params are checked
         // and it will only succeed if sender has permissions to set something to the namespace.
         if (_setDefault) {

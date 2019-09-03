@@ -3,11 +3,11 @@ pragma solidity 0.4.24;
 import "./IKernel.sol";
 import "./KernelConstants.sol";
 import "./KernelStorage.sol";
-import "../common/DepositableDelegateProxy.sol";
+import "../common/NonDepositableDelegateProxy.sol";
 import "../common/IsContract.sol";
 
 
-contract KernelProxy is IKernelEvents, KernelStorage, KernelAppIds, KernelNamespaceConstants, IsContract, DepositableDelegateProxy {
+contract KernelProxy is IKernelEvents, KernelStorage, KernelAppIds, KernelNamespaceConstants, IsContract, NonDepositableDelegateProxy {
     /**
     * @dev KernelProxy is a proxy contract to a kernel implementation. The implementation
     *      can update the reference, which effectively upgrades the contract

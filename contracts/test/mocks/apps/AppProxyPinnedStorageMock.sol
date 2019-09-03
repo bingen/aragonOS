@@ -1,6 +1,6 @@
 pragma solidity 0.4.24;
 
-import "../../../apps/AppProxyPinned.sol";
+import "../../../apps/AppProxyPinnedDepositable.sol";
 import "../../../kernel/IKernel.sol";
 import "../../../kernel/Kernel.sol";
 
@@ -19,9 +19,9 @@ contract KernelPinnedStorageMock is Kernel, FakeAppConstants {
 // Testing this contract is a bit of a pain... we can't overload anything to make the contract check
 // pass in the constructor, so we're forced to initialize this with a mocked Kernel that already
 // sets a contract for the fake app.
-contract AppProxyPinnedStorageMock is AppProxyPinned, FakeAppConstants {
+contract AppProxyPinnedStorageMock is AppProxyPinnedDepositable, FakeAppConstants {
     constructor(KernelPinnedStorageMock _mockKernel)
-        AppProxyPinned(IKernel(_mockKernel), FAKE_APP_ID, new bytes(0))
+        AppProxyPinnedDepositable(IKernel(_mockKernel), FAKE_APP_ID, new bytes(0))
         public // solium-disable-line visibility-first
     {
     }
